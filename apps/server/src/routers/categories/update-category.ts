@@ -18,7 +18,7 @@ const updateCategoryRoute = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     await ctx.needsPermission(Permission.MANAGE_EMOJIS);
 
-    const existingCategory = await db
+    const existingCategory = db
       .select()
       .from(categories)
       .where(eq(categories.id, input.categoryId))

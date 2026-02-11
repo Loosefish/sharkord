@@ -22,7 +22,7 @@ const addCategoryRoute = protectedProcedure
 
     const targetPosition = (result?.maxPos ?? 0) + 1;
 
-    const created = await db
+    const created = db
       .insert(categories)
       .values({
         name: input.name,

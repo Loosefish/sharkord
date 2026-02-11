@@ -212,14 +212,14 @@ describe('event-bus', () => {
     });
 
     test('should not throw when emitting event with no handlers', async () => {
-      await expect(
-        eventBus.emit('message:created', {
-          messageId: 1,
-          channelId: 2,
-          userId: 3,
-          content: 'test'
-        })
-      ).resolves.toBeUndefined();
+      expect(
+            eventBus.emit('message:created', {
+                messageId: 1,
+                channelId: 2,
+                userId: 3,
+                content: 'test'
+            })
+        ).resolves.toBeUndefined();
     });
 
     test('should continue calling other handlers if one throws', async () => {

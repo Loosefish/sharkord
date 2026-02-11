@@ -19,7 +19,7 @@ import {
 const getMessageByFileId = async (
   fileId: number
 ): Promise<TMessage | undefined> => {
-  const row = await db
+  const row = db
     .select({ message: messages })
     .from(messageFiles)
     .innerJoin(messages, eq(messages.id, messageFiles.messageId))
@@ -32,7 +32,7 @@ const getMessageByFileId = async (
 const getMessage = async (
   messageId: number
 ): Promise<TJoinedMessage | undefined> => {
-  const message = await db
+  const message = db
     .select()
     .from(messages)
     .where(eq(messages.id, messageId))
@@ -41,7 +41,7 @@ const getMessage = async (
 
   if (!message) return undefined;
 
-  const channel = await db
+  const channel = db
     .select({
       fileAccessToken: channels.fileAccessToken,
       private: channels.private

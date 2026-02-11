@@ -11,6 +11,7 @@ import { infoSelector } from './selectors';
 import { serverSliceActions } from './slice';
 import { initSubscriptions } from './subscriptions';
 import { type TDisconnectInfo } from './types';
+import { LocalStorageKey, removeLocalStorageItem } from '@/helpers/storage';
 
 let unsubscribeFromServer: (() => void) | null = null;
 
@@ -55,7 +56,7 @@ export const connect = async () => {
   const { serverId } = info;
 
   const host = getHostFromServer();
-  const trpc = await connectToTRPC(host);
+  const trpc = connectToTRPC(host);
 
   const { hasPassword, handshakeHash } = await trpc.others.handshake.query();
 
@@ -83,6 +84,7 @@ export const joinServer = async (handshakeHash: string, password?: string) => {
 
 export const disconnectFromServer = () => {
   cleanup();
+  removeLocalStorageItem(LocalStorageKey.TOKEN);
   unsubscribeFromServer?.();
 };
 

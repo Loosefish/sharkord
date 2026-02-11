@@ -5,7 +5,7 @@ describe('categories router', () => {
   test('should throw when user lacks permissions (get)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.categories.get({
         categoryId: 1
       })
@@ -15,7 +15,7 @@ describe('categories router', () => {
   test('should throw when user lacks permissions (update)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.categories.update({
         categoryId: 1,
         name: 'Updated Category Name'
@@ -26,7 +26,7 @@ describe('categories router', () => {
   test('should throw when user lacks permissions (delete)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.categories.delete({
         categoryId: 1
       })
@@ -36,7 +36,7 @@ describe('categories router', () => {
   test('should throw when user lacks permissions (create)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.categories.add({
         name: 'New Category'
       })
@@ -46,7 +46,7 @@ describe('categories router', () => {
   test('should throw when user lacks permissions (reorder)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.categories.reorder({
         categoryIds: [2, 1]
       })
@@ -122,7 +122,7 @@ describe('categories router', () => {
       categoryId: 1
     });
 
-    await expect(
+    expect(
       caller.categories.get({
         categoryId: 1
       })
@@ -132,7 +132,7 @@ describe('categories router', () => {
   test('should throw error when deleting non-existing category', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.categories.delete({
         categoryId: 999
       })
@@ -142,7 +142,7 @@ describe('categories router', () => {
   test('should throw error when updating non-existing category', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.categories.update({
         categoryId: 999,
         name: 'Non-existing Category'

@@ -23,7 +23,7 @@ const enqueueLogin = (userId: number, info: TConnectionInfo | undefined) => {
     const { ip, ...rest } = info;
     const ipInfo = ip ? await getIpInfo(ip) : undefined;
 
-    await db
+    db
       .insert(logins)
       .values({
         userId,

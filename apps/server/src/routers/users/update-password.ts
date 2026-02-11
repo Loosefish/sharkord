@@ -1,8 +1,9 @@
-import { ActivityLogType, sha256 } from '@sharkord/shared';
+import { ActivityLogType } from '@sharkord/shared';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '../../db';
 import { users } from '../../db/schema';
+import { hashPassword, verifyPassword } from '../../helpers/password';
 import { enqueueActivityLog } from '../../queues/activity-log';
 import { invariant } from '../../utils/invariant';
 import { protectedProcedure } from '../../utils/trpc';
@@ -16,7 +17,7 @@ const updatePasswordRoute = protectedProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const user = await db
+    const user = db
       .select({
         password: users.password
       })
@@ -29,9 +30,13 @@ const updatePasswordRoute = protectedProcedure
       message: 'User not found'
     });
 
-    const hashedCurrentPassword = await sha256(input.currentPassword);
+    // Verify current password (supports both Argon2id and legacy SHA256)
+    const { isValid } = await verifyPassword(
+      input.currentPassword,
+      user.password
+    );
 
-    if (user.password !== hashedCurrentPassword) {
+    if (!isValid) {
       ctx.throwValidationError(
         'currentPassword',
         'Current password is incorrect'
@@ -45,9 +50,10 @@ const updatePasswordRoute = protectedProcedure
       );
     }
 
-    const hashedNewPassword = await sha256(input.newPassword);
+    // Hash new password with Argon2id
+    const hashedNewPassword = await hashPassword(input.newPassword);
 
-    await db
+    db
       .update(users)
       .set({
         password: hashedNewPassword

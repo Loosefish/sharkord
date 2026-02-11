@@ -22,7 +22,7 @@ const syncRolePermissions = async (
       await tx.insert(rolePermissions).values(permissionInserts);
     }
 
-    const updatedRole = await tx
+    const updatedRole = tx
       .select()
       .from(roles)
       .where(eq(roles.id, roleId))

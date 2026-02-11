@@ -174,7 +174,7 @@ class VoiceRuntime {
   };
 
   public destroy = async () => {
-    await this.router?.close();
+    this.router?.close();
 
     Object.values(this.consumerTransports).forEach((transport) => {
       transport.close();

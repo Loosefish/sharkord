@@ -11,11 +11,10 @@ import {
   getLocalStorageItem,
   LocalStorageKey,
   removeLocalStorageItem,
-  SessionStorageKey,
-  setLocalStorageItem,
-  setSessionStorageItem
+  setLocalStorageItem
 } from '@/helpers/storage';
 import { useForm } from '@/hooks/use-form';
+import { sha256 } from '@sharkord/shared';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,7 +25,7 @@ const Connect = memo(() => {
     rememberCredentials: boolean;
   }>({
     identity: getLocalStorageItem(LocalStorageKey.IDENTITY) || '',
-    password: getLocalStorageItem(LocalStorageKey.USER_PASSWORD) || '',
+    password: '',
     rememberCredentials: !!getLocalStorageItem(
       LocalStorageKey.REMEMBER_CREDENTIALS
     )
@@ -59,6 +58,8 @@ const Connect = memo(() => {
 
     try {
       const url = getUrlFromServer();
+      const hashedPassword = await sha256(values.password);
+
       const response = await fetch(`${url}/login`, {
         method: 'POST',
         headers: {
@@ -66,7 +67,7 @@ const Connect = memo(() => {
         },
         body: JSON.stringify({
           identity: values.identity,
-          password: values.password,
+          password: hashedPassword,
           invite: inviteCode
         })
       });
@@ -80,11 +81,12 @@ const Connect = memo(() => {
 
       const data = (await response.json()) as { token: string };
 
-      setSessionStorageItem(SessionStorageKey.TOKEN, data.token);
+      setLocalStorageItem(LocalStorageKey.TOKEN, data.token);
 
       if (values.rememberCredentials) {
         setLocalStorageItem(LocalStorageKey.IDENTITY, values.identity);
-        setLocalStorageItem(LocalStorageKey.USER_PASSWORD, values.password);
+      } else {
+        removeLocalStorageItem(LocalStorageKey.IDENTITY);
       }
 
       await connect();
@@ -146,7 +148,7 @@ const Connect = memo(() => {
                 onEnter={onConnectClick}
               />
             </Group>
-            <Group label="Remember Credentials">
+            <Group label="Remember Me">
               <Switch
                 checked={values.rememberCredentials}
                 onCheckedChange={onRememberCredentialsChange}

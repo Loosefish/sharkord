@@ -46,7 +46,7 @@ const createHttpServer = async (port: number = config.server.port) => {
 
         try {
           if (req.method === 'GET' && req.url === '/healthz') {
-            return await healthRouteHandler(req, res);
+            return healthRouteHandler(req, res);
           }
 
           if (req.method === 'GET' && req.url === '/info') {
@@ -98,7 +98,7 @@ const createHttpServer = async (port: number = config.server.port) => {
           }
 
           if (req.method === 'GET' && req.url?.startsWith('/')) {
-            return await interfaceRouteHandler(req, res);
+            return interfaceRouteHandler(req, res);
           }
         } catch (error) {
           const errorsMap: Record<string, string> = {};

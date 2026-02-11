@@ -76,7 +76,7 @@ beforeEach(async () => {
   setTestDb(tdb);
 
   // apply migrations and seed data for this test
-  await migrate(tdb, { migrationsFolder: DRIZZLE_PATH });
+  migrate(tdb, { migrationsFolder: DRIZZLE_PATH });
   await seedDatabase(tdb);
 });
 

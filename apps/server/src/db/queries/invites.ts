@@ -11,11 +11,11 @@ const isInviteValid = async (
     return 'Invalid invite code';
   }
 
-  const invite = await db
-    .select()
-    .from(invites)
-    .where(eq(invites.code, code))
-    .get();
+  const invite = db
+      .select()
+      .from(invites)
+      .where(eq(invites.code, code))
+      .get();
 
   if (!invite) {
     return 'Invite code not found';
@@ -57,13 +57,13 @@ const getInvites = async (): Promise<TJoinedInvite[]> => {
     .leftJoin(avatarFiles, eq(users.avatarId, avatarFiles.id))
     .leftJoin(bannerFiles, eq(users.bannerId, bannerFiles.id));
 
-  const rolesByUser = await db
-    .select({
-      userId: userRoles.userId,
-      roleId: userRoles.roleId
-    })
-    .from(userRoles)
-    .all();
+  const rolesByUser = db
+      .select({
+          userId: userRoles.userId,
+          roleId: userRoles.roleId
+      })
+      .from(userRoles)
+      .all();
 
   const rolesMap = rolesByUser.reduce(
     (acc, { userId, roleId }) => {

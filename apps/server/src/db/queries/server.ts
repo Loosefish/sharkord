@@ -7,14 +7,14 @@ import { files, settings } from '../schema';
 let token: string;
 
 const getSettings = async (): Promise<TJoinedSettings> => {
-  const serverSettings = await db.select().from(settings).get()!;
+  const serverSettings = db.select().from(settings).get()!;
 
   const logo = serverSettings.logoId
-    ? await db
-        .select()
-        .from(files)
-        .where(eq(files.id, serverSettings.logoId))
-        .get()
+    ? db
+      .select()
+      .from(files)
+      .where(eq(files.id, serverSettings.logoId))
+      .get()
     : undefined;
 
   return {

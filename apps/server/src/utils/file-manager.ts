@@ -194,7 +194,7 @@ class FileManager {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const existingFile = await db
+      const existingFile = db
         .select()
         .from(files)
         .where(eq(files.name, fileName))

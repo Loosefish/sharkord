@@ -17,7 +17,7 @@ const getPublicUserById = async (
   const avatarFiles = alias(files, 'avatarFiles');
   const bannerFiles = alias(files, 'bannerFiles');
 
-  const results = await db
+  const results = db
     .select({
       id: users.id,
       name: users.name,
@@ -38,7 +38,7 @@ const getPublicUserById = async (
 
   if (!results) return undefined;
 
-  const roles = await db
+  const roles = db
     .select({ roleId: userRoles.roleId })
     .from(userRoles)
     .where(eq(userRoles.userId, userId))
@@ -66,7 +66,7 @@ const getPublicUsers = async (
   const bannerFiles = alias(files, 'bannerFiles');
 
   if (returnIdentity) {
-    const results = await db
+    const results = db
       .select({
         id: users.id,
         name: users.name,
@@ -85,7 +85,7 @@ const getPublicUsers = async (
       .leftJoin(bannerFiles, eq(users.bannerId, bannerFiles.id))
       .all();
 
-    const rolesByUser = await db
+    const rolesByUser = db
       .select({
         userId: userRoles.userId,
         roleId: userRoles.roleId
@@ -117,7 +117,7 @@ const getPublicUsers = async (
       roleIds: rolesMap[result.id] || []
     }));
   } else {
-    const results = await db
+    const results = db
       .select({
         id: users.id,
         name: users.name,
@@ -136,7 +136,7 @@ const getPublicUsers = async (
       .all();
 
     // Get role IDs for all users
-    const rolesByUser = await db
+    const rolesByUser = db
       .select({
         userId: userRoles.userId,
         roleId: userRoles.roleId
@@ -172,7 +172,7 @@ const getPublicUsers = async (
 const getStorageUsageByUserId = async (
   userId: number
 ): Promise<TStorageData> => {
-  const result = await db
+  const result = db
     .select({
       fileCount: count(files.id),
       usedStorage: sum(files.size)
@@ -194,7 +194,7 @@ const getUserById = async (
   const avatarFiles = alias(files, 'avatarFiles');
   const bannerFiles = alias(files, 'bannerFiles');
 
-  const user = await db
+  const user = db
     .select({
       id: users.id,
       identity: users.identity,
@@ -221,11 +221,7 @@ const getUserById = async (
 
   if (!user) return undefined;
 
-  const roles = await db
-    .select({ roleId: userRoles.roleId })
-    .from(userRoles)
-    .where(eq(userRoles.userId, userId))
-    .all();
+  const roles = newFunction();
 
   return {
     ...user,
@@ -233,6 +229,14 @@ const getUserById = async (
     banner: user.banner,
     roleIds: roles.map((r) => r.roleId)
   };
+
+  function newFunction() {
+    return db
+      .select({ roleId: userRoles.roleId })
+      .from(userRoles)
+      .where(eq(userRoles.userId, userId))
+      .all();
+  }
 };
 
 const getUserByIdentity = async (
@@ -241,7 +245,7 @@ const getUserByIdentity = async (
   const avatarFiles = alias(files, 'avatarFiles');
   const bannerFiles = alias(files, 'bannerFiles');
 
-  const user = await db
+  const user = db
     .select({
       id: users.id,
       identity: users.identity,
@@ -268,7 +272,7 @@ const getUserByIdentity = async (
 
   if (!user) return undefined;
 
-  const roles = await db
+  const roles = db
     .select({ roleId: userRoles.roleId })
     .from(userRoles)
     .where(eq(userRoles.userId, user.id))
@@ -300,7 +304,7 @@ const getUsers = async (): Promise<TJoinedUser[]> => {
   const avatarFiles = alias(files, 'avatarFiles');
   const bannerFiles = alias(files, 'bannerFiles');
 
-  const results = await db
+  const results = db
     .select({
       id: users.id,
       name: users.name,
@@ -325,7 +329,7 @@ const getUsers = async (): Promise<TJoinedUser[]> => {
     .all();
 
   // Get role IDs for all users
-  const rolesByUser = await db
+  const rolesByUser = db
     .select({
       userId: userRoles.userId,
       roleId: userRoles.roleId

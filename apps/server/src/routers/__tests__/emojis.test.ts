@@ -6,7 +6,7 @@ describe('emojis router', () => {
   test('should throw when user lacks permissions (add)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.emojis.add([
         {
           fileId: 'test-file-id',
@@ -19,7 +19,7 @@ describe('emojis router', () => {
   test('should throw when user lacks permissions (getAll)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.emojis.getAll()).rejects.toThrow(
+    expect(caller.emojis.getAll()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -27,7 +27,7 @@ describe('emojis router', () => {
   test('should throw when user lacks permissions (update)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.emojis.update({
         emojiId: 1,
         name: 'updated_emoji'
@@ -38,7 +38,7 @@ describe('emojis router', () => {
   test('should throw when user lacks permissions (delete)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.emojis.delete({
         emojiId: 1
       })
@@ -207,7 +207,7 @@ describe('emojis router', () => {
     const emojis = await caller.emojis.getAll();
     const secondEmoji = emojis.find((e) => e.name === 'emoji_second');
 
-    await expect(
+    expect(
       caller.emojis.update({
         emojiId: secondEmoji!.id,
         name: 'emoji_first'
@@ -218,7 +218,7 @@ describe('emojis router', () => {
   test('should throw when updating non-existing emoji', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.emojis.update({
         emojiId: 999,
         name: 'non_existing'
@@ -260,7 +260,7 @@ describe('emojis router', () => {
   test('should throw when deleting non-existing emoji', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.emojis.delete({
         emojiId: 999
       })

@@ -26,7 +26,7 @@ const changeAvatarRoute = protectedProcedure
     if (user.avatarId) {
       await removeFile(user.avatarId);
 
-      await db
+      db
         .update(users)
         .set({ avatarId: null })
         .where(eq(users.id, ctx.userId))
@@ -34,7 +34,7 @@ const changeAvatarRoute = protectedProcedure
     }
 
     if (input.fileId) {
-      const tempFile = await fileManager.getTemporaryFile(input.fileId);
+      const tempFile = fileManager.getTemporaryFile(input.fileId);
 
       invariant(tempFile, {
         code: 'NOT_FOUND',
@@ -48,7 +48,7 @@ const changeAvatarRoute = protectedProcedure
 
       const newFile = await fileManager.saveFile(input.fileId, ctx.userId);
 
-      await db
+      db
         .update(users)
         .set({ avatarId: newFile.id })
         .where(eq(users.id, ctx.userId))

@@ -26,7 +26,7 @@ await pluginManager.loadPlugins();
 await createServers();
 await loadMediasoup();
 await initVoiceRuntimes();
-await loadCrons();
+loadCrons();
 
 const host = IS_PRODUCTION ? SERVER_PRIVATE_IP : 'localhost';
 const url = `http://${host}:${config.server.port}/`;

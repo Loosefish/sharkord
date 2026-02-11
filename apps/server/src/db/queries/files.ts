@@ -12,12 +12,7 @@ const getExceedingOldFiles = async (newFileSize: number) => {
     throw new Error('File size exceeds total server storage quota');
   }
 
-  const currentUsage = await db
-    .select({
-      totalSize: sum(files.size)
-    })
-    .from(files)
-    .get();
+  const currentUsage = newFunction()();
 
   const currentTotalSize = Number(currentUsage?.totalSize ?? 0);
   const wouldExceedBy =
@@ -51,6 +46,15 @@ const getExceedingOldFiles = async (newFileSize: number) => {
   }
 
   return filesToDelete;
+
+  function newFunction() {
+    return db
+      .select({
+        totalSize: sum(files.size)
+      })
+      .from(files)
+      .get;
+  }
 };
 
 const getFilesByMessageId = async (messageId: number): Promise<TFile[]> =>
@@ -63,7 +67,7 @@ const getFilesByMessageId = async (messageId: number): Promise<TFile[]> =>
     .map((row) => row.files);
 
 const getFilesByUserId = async (userId: number): Promise<TFile[]> => {
-  const result = await db
+  const result = db
     .select({
       file: files,
       channel: channels
@@ -92,7 +96,7 @@ const getFilesByUserId = async (userId: number): Promise<TFile[]> => {
 };
 
 const getUsedFileQuota = async (): Promise<number> => {
-  const result = await db
+  const result = db
     .select({
       usedSpace: sum(files.size)
     })
@@ -103,7 +107,7 @@ const getUsedFileQuota = async (): Promise<number> => {
 };
 
 const getOrphanedFileIds = async (): Promise<number[]> => {
-  const orphanedFileIds = await db.all<{ id: number }>(sql`
+  const orphanedFileIds = db.all<{ id: number; }>(sql`
     SELECT f.id
     FROM files f
     WHERE NOT EXISTS (

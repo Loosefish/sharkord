@@ -18,7 +18,7 @@ const deleteChannelRoute = protectedProcedure
   .mutation(async ({ input, ctx }) => {
     await ctx.needsPermission(Permission.MANAGE_CHANNELS);
 
-    const removedChannel = await db
+    const removedChannel = db
       .delete(channels)
       .where(eq(channels.id, input.channelId))
       .returning()

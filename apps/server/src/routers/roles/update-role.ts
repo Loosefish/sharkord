@@ -22,7 +22,7 @@ const updateRoleRoute = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     await ctx.needsPermission(Permission.MANAGE_ROLES);
 
-    const updatedRole = await db
+    const updatedRole = db
       .update(roles)
       .set({
         name: input.name,

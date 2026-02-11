@@ -15,7 +15,7 @@ const getChannelRoute = protectedProcedure
   .query(async ({ input, ctx }) => {
     await ctx.needsPermission(Permission.MANAGE_CHANNELS);
 
-    const channel = await db
+    const channel = db
       .select()
       .from(channels)
       .where(eq(channels.id, input.channelId))

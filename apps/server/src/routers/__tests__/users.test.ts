@@ -9,7 +9,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (getAll)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.users.getAll()).rejects.toThrow(
+    expect(caller.users.getAll()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -17,7 +17,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (getInfo)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.getInfo({
         userId: 1
       })
@@ -27,7 +27,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (ban)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.ban({
         userId: 1,
         reason: 'Test ban'
@@ -38,7 +38,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (unban)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.unban({
         userId: 1
       })
@@ -48,7 +48,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (kick)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.kick({
         userId: 1,
         reason: 'Test kick'
@@ -59,7 +59,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (addRole)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.addRole({
         userId: 1,
         roleId: 2
@@ -70,7 +70,7 @@ describe('users router', () => {
   test('should throw when user lacks permissions (removeRole)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.users.removeRole({
         userId: 1,
         roleId: 2
@@ -109,7 +109,7 @@ describe('users router', () => {
   test('should throw when getting info for non-existing user', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.getInfo({
         userId: 999
       })
@@ -153,8 +153,8 @@ describe('users router', () => {
   test('should update password successfully', async () => {
     const { caller } = await initTest();
 
-    const currentPassword = 'password123';
-    const newPassword = 'newpassword456';
+    const currentPassword = await sha256('password123');
+    const newPassword = await sha256('newpassword456');
 
     await caller.users.updatePassword({
       currentPassword,
@@ -162,7 +162,7 @@ describe('users router', () => {
       confirmNewPassword: newPassword
     });
 
-    const row = await tdb
+    const row = tdb
       .select({
         password: users.password
       })
@@ -172,23 +172,21 @@ describe('users router', () => {
 
     expect(row).toBeDefined();
 
-    // should not be plain text
+    // should not be SHA256 hash
     expect(row!.password).not.toBe(newPassword);
 
-    const hashedPassword = await sha256(newPassword);
-
-    // should be hashed
-    expect(row!.password).toBe(hashedPassword);
+    // should be an Argon2id hash
+    expect(row!.password).toStartWith('$argon2');
   });
 
   test('should throw when current password is incorrect', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.updatePassword({
-        currentPassword: 'wrongpassword',
-        newPassword: 'newpassword',
-        confirmNewPassword: 'newpassword'
+        currentPassword: await sha256('wrongpassword'),
+        newPassword: await sha256('newpassword'),
+        confirmNewPassword: await sha256('newpassword')
       })
     ).rejects.toThrow('Current password is incorrect');
   });
@@ -196,11 +194,11 @@ describe('users router', () => {
   test('should throw when new passwords do not match', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.updatePassword({
-        currentPassword: 'password123',
-        newPassword: 'newpassword',
-        confirmNewPassword: 'differentpassword'
+        currentPassword: await sha256('password123'),
+        newPassword: await sha256('newpassword'),
+        confirmNewPassword: await sha256('differentpassword')
       })
     ).rejects.toThrow('New password and confirmation do not match');
   });
@@ -350,7 +348,7 @@ describe('users router', () => {
   test('should throw when adding duplicate role', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.addRole({
         userId: 2,
         roleId: 2
@@ -381,7 +379,7 @@ describe('users router', () => {
   test('should throw when removing non-existent role', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.removeRole({
         userId: 2,
         roleId: 3
@@ -424,7 +422,7 @@ describe('users router', () => {
   test('should throw when trying to ban yourself', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.ban({
         userId: 1
       })
@@ -454,7 +452,7 @@ describe('users router', () => {
   test('should throw when kicking non-connected user', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.users.kick({
         userId: 999
       })

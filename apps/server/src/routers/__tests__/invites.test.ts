@@ -5,7 +5,7 @@ describe('invites router', () => {
   test('should throw when user lacks permissions (getAll)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.invites.getAll()).rejects.toThrow(
+    expect(caller.invites.getAll()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -13,7 +13,7 @@ describe('invites router', () => {
   test('should throw when user lacks permissions (add)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.invites.add({
         maxUses: 10
       })
@@ -23,7 +23,7 @@ describe('invites router', () => {
   test('should throw when user lacks permissions (delete)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.invites.delete({
         inviteId: 1
       })
@@ -108,7 +108,7 @@ describe('invites router', () => {
       code: 'duplicate-code'
     });
 
-    await expect(
+    expect(
       caller.invites.add({
         code: 'duplicate-code'
       })
@@ -142,7 +142,7 @@ describe('invites router', () => {
   test('should throw error when deleting non-existing invite', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.invites.delete({
         inviteId: 999999
       })

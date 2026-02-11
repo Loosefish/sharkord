@@ -23,7 +23,7 @@ const publicRouteHandler = async (
   const url = new URL(req.url!, `http://${req.headers.host}`);
   const fileName = decodeURIComponent(path.basename(url.pathname));
 
-  const dbFile = await db
+  const dbFile = db
     .select()
     .from(files)
     .where(eq(files.name, fileName))
@@ -49,7 +49,7 @@ const publicRouteHandler = async (
   const associatedMessage = await getMessageByFileId(dbFile.id);
 
   if (associatedMessage) {
-    const channel = await db
+    const channel = db
       .select()
       .from(channels)
       .where(eq(channels.id, associatedMessage.channelId))

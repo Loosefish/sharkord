@@ -22,7 +22,7 @@ const upload = async (file: File, token: string) => {
 const getFileByMessageId = async (
   messageId: number
 ): Promise<TFile | undefined> => {
-  const messageFile = await tdb
+  const messageFile = tdb
     .select()
     .from(messageFiles)
     .where(eq(messageFiles.messageId, messageId))
@@ -32,7 +32,7 @@ const getFileByMessageId = async (
     return undefined;
   }
 
-  const dbFile = await tdb
+  const dbFile = tdb
     .select()
     .from(files)
     .where(eq(files.id, messageFile.fileId))
@@ -168,7 +168,7 @@ describe('/public', () => {
     expect(orphanFile!.tempFile).toBeDefined();
     expect(orphanFile!.messageId).toBeNull();
 
-    const dbFile = await tdb
+    const dbFile = tdb
       .select()
       .from(files)
       .where(eq(files.md5, orphanFile!.tempFile!.md5))
@@ -253,7 +253,7 @@ describe('/public', () => {
       messageId: orphanFile!.messageId!
     });
 
-    const afterDbFile = await tdb
+    const afterDbFile = tdb
       .select()
       .from(files)
       .where(eq(files.id, dbFile!.id))
@@ -283,11 +283,11 @@ describe('/public', () => {
     });
 
     // load crons here, it will run the file cleanup cron job
-    await loadCrons();
+    loadCrons();
 
     await Bun.sleep(1000); // wait a bit for cron to finish
 
-    const afterDbFile = await tdb
+    const afterDbFile = tdb
       .select()
       .from(files)
       .where(eq(files.id, dbFile!.id))
@@ -314,7 +314,7 @@ describe('/public', () => {
       private: true
     });
 
-    const channel = await tdb
+    const channel = tdb
       .select()
       .from(channels)
       .where(eq(channels.id, channelId))
@@ -407,7 +407,7 @@ describe('/public', () => {
       private: true
     });
 
-    const channel = await tdb
+    const channel = tdb
       .select()
       .from(channels)
       .where(eq(channels.id, channelId))
@@ -473,13 +473,13 @@ describe('/public', () => {
       private: true
     });
 
-    const channel1 = await tdb
+    const channel1 = tdb
       .select()
       .from(channels)
       .where(eq(channels.id, channelId1))
       .get();
 
-    const channel2 = await tdb
+    const channel2 = tdb
       .select()
       .from(channels)
       .where(eq(channels.id, channelId2))
@@ -531,7 +531,7 @@ describe('/public', () => {
       type: ChannelType.TEXT
     });
 
-    const channel = await tdb
+    const channel = tdb
       .select()
       .from(channels)
       .where(eq(channels.id, channelId))

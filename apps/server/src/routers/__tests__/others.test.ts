@@ -12,7 +12,7 @@ describe('others router', () => {
   test('should throw when user tries to join with no handshake', async () => {
     const { caller } = await getCaller(1);
 
-    await expect(
+    expect(
       caller.others.joinServer({
         handshakeHash: ''
       })
@@ -87,7 +87,7 @@ describe('others router', () => {
   test('should throw when using invalid secret token', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.others.useSecretToken({ token: 'invalid-token' })
     ).rejects.toThrow('Invalid secret token');
   });

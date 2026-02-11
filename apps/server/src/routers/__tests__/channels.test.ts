@@ -8,7 +8,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (add)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.add({
         type: ChannelType.TEXT,
         name: 'new-channel',
@@ -20,7 +20,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (get)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.get({
         channelId: 1
       })
@@ -30,7 +30,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (update)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.update({
         channelId: 1,
         name: 'updated-channel',
@@ -43,7 +43,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (delete)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.delete({
         channelId: 1
       })
@@ -53,7 +53,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (reorder)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.reorder({
         categoryId: 1,
         channelIds: [2, 1]
@@ -64,7 +64,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (updatePermissions)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.updatePermissions({
         channelId: 1,
         roleId: 1,
@@ -76,7 +76,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (getPermissions)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.getPermissions({
         channelId: 1
       })
@@ -86,7 +86,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (deletePermissions)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.deletePermissions({
         channelId: 1,
         roleId: 1
@@ -97,7 +97,7 @@ describe('channels router', () => {
   test('should throw when user lacks permissions (rotateFileAccessToken)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.channels.rotateFileAccessToken({
         channelId: 1
       })
@@ -202,7 +202,7 @@ describe('channels router', () => {
       channelId: 3
     });
 
-    await expect(
+    expect(
       caller.channels.get({
         channelId: 3
       })
@@ -212,7 +212,7 @@ describe('channels router', () => {
   test('should throw when deleting non-existing channel', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.delete({
         channelId: 999
       })
@@ -222,7 +222,7 @@ describe('channels router', () => {
   test('should throw when getting non-existing channel', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.get({
         channelId: 999
       })
@@ -564,7 +564,7 @@ describe('channels router', () => {
   test('should validate channel name length (too short)', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.add({
         type: ChannelType.TEXT,
         name: '',
@@ -576,7 +576,7 @@ describe('channels router', () => {
   test('should validate channel name length (too long)', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.add({
         type: ChannelType.TEXT,
         name: 'this-is-a-very-long-channel-name-that-exceeds-the-limit',
@@ -588,7 +588,7 @@ describe('channels router', () => {
   test('should validate topic length (too long)', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.update({
         channelId: 1,
         name: 'test-channel',
@@ -722,7 +722,7 @@ describe('channels router', () => {
   test('should throw when rotating token for non-existing channel', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.channels.rotateFileAccessToken({
         channelId: 999
       })
