@@ -1,4 +1,4 @@
-import { ActivityLogType, sha256, type TJoinedUser } from '@sharkord/shared';
+import { ActivityLogType, type TJoinedUser } from '@sharkord/shared';
 import { eq, sql } from 'drizzle-orm';
 import http from 'http';
 import jwt from 'jsonwebtoken';
@@ -11,6 +11,7 @@ import { getServerToken, getSettings } from '../db/queries/server';
 import { getUserByIdentity } from '../db/queries/users';
 import { invites, userRoles, users } from '../db/schema';
 import { getWsInfo } from '../helpers/get-ws-info';
+import { hashPassword, verifyPassword } from '../helpers/password';
 import { enqueueActivityLog } from '../queues/activity-log';
 import { invariant } from '../utils/invariant';
 import { getJsonBody } from './helpers';
@@ -28,7 +29,7 @@ const registerUser = async (
   inviteCode?: string,
   ip?: string
 ): Promise<TJoinedUser> => {
-  const hashedPassword = await sha256(password);
+  const hashedPassword = await hashPassword(password);
 
   const defaultRole = await getDefaultRole();
 
@@ -37,7 +38,7 @@ const registerUser = async (
     message: 'Default role not found'
   });
 
-  const user = await db
+  const user = db
     .insert(users)
     .values({
       name: 'SharkordUser',
@@ -116,11 +117,26 @@ const loginRouteHandler = async (
     );
   }
 
-  const hashedPassword = await sha256(data.password);
-  const passwordMatches = existingUser.password === hashedPassword;
+  // Verify password (supports both Argon2id and legacy SHA256)
+  const { isValid, needsRehash } = await verifyPassword(
+    data.password,
+    existingUser.password
+  );
 
-  if (!passwordMatches) {
+  if (!isValid) {
     throw new HttpValidationError('password', 'Invalid password');
+  }
+
+  // Auto-upgrade legacy passwords to Argon2id
+  if (needsRehash) {
+    const newHash = await hashPassword(data.password);
+    db
+      .update(users)
+      .set({
+        password: newHash
+      })
+      .where(eq(users.id, existingUser.id))
+      .run();
   }
 
   const token = jwt.sign({ userId: existingUser.id }, await getServerToken(), {

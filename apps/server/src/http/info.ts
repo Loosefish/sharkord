@@ -4,7 +4,7 @@ import { getSettings } from '../db/queries/server';
 import { SERVER_VERSION } from '../utils/env';
 
 const infoRouteHandler = async (
-  req: http.IncomingMessage,
+  _req: http.IncomingMessage,
   res: http.ServerResponse
 ) => {
   const settings = await getSettings();

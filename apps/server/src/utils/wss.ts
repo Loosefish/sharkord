@@ -85,7 +85,7 @@ const createContext = async ({
     channelId: number,
     targetPermission: ChannelPermission
   ) => {
-    const channel = await db
+    const channel = db
       .select({
         private: channels.private
       })

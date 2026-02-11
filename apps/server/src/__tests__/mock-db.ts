@@ -30,7 +30,7 @@ const initDb = async () => {
 
   tdb = drizzle({ client: sqlite });
 
-  await migrate(tdb, { migrationsFolder: DRIZZLE_PATH });
+  migrate(tdb, { migrationsFolder: DRIZZLE_PATH });
   await seedDatabase(tdb);
 
   return tdb;

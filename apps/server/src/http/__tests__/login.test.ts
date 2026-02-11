@@ -44,7 +44,7 @@ describe('/login', () => {
     expect(data).toHaveProperty('success', true);
     expect(data).toHaveProperty('token');
 
-    const newUser = await tdb
+    const newUser = tdb
       .select()
       .from(users)
       .where(eq(users.identity, 'newuser'))
@@ -88,7 +88,7 @@ describe('/login', () => {
     expect(data).toHaveProperty('success', true);
     expect(data).toHaveProperty('token');
 
-    const updatedInvite = await tdb
+    const updatedInvite = tdb
       .select()
       .from(invites)
       .where(eq(invites.code, 'TESTINVITE123'))
@@ -198,13 +198,16 @@ describe('/login', () => {
   });
 
   test('should fail with missing password', async () => {
-    const response = await login('someidentity', '');
+    // With client-side hashing, empty password gets hashed to a valid hash string
+    // So validation passes, but authentication fails since no user has that password
+    const response = await login('testowner', '');
 
     expect(response.status).toBe(400);
 
-    const data = await response.json();
+    const data: any = await response.json();
 
     expect(data).toHaveProperty('errors');
+    expect(data.errors).toHaveProperty('password', 'Invalid password');
   });
 
   test('should return valid JWT token with userId claim', async () => {
@@ -230,7 +233,7 @@ describe('/login', () => {
 
     expect(response.status).toBe(200);
 
-    const newUser = await tdb
+    const newUser = tdb
       .select()
       .from(users)
       .where(eq(users.identity, 'roleuser'))
@@ -238,7 +241,7 @@ describe('/login', () => {
 
     expect(newUser).toBeTruthy();
 
-    const userRole = await tdb
+    const userRole = tdb
       .select()
       .from(userRoles)
       .where(eq(userRoles.userId, newUser!.id))
@@ -246,7 +249,7 @@ describe('/login', () => {
 
     expect(userRole).toBeTruthy();
 
-    const role = await tdb
+    const role = tdb
       .select()
       .from(roles)
       .where(eq(roles.id, userRole!.roleId))

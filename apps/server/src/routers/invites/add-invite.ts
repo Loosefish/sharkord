@@ -19,7 +19,7 @@ const addInviteRoute = protectedProcedure
     await ctx.needsPermission(Permission.MANAGE_INVITES);
 
     const newCode = input.code || getRandomString(24);
-    const existingInvite = await db
+    const existingInvite = db
       .select()
       .from(invites)
       .where(eq(invites.code, newCode))
@@ -30,7 +30,7 @@ const addInviteRoute = protectedProcedure
       message: 'An invite with this code already exists'
     });
 
-    const invite = await db
+    const invite = db
       .insert(invites)
       .values({
         code: newCode,

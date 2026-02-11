@@ -16,7 +16,7 @@ const deleteInviteRoute = protectedProcedure
   .mutation(async ({ input, ctx }) => {
     await ctx.needsPermission(Permission.MANAGE_INVITES);
 
-    const removedInvite = await db
+    const removedInvite = db
       .delete(invites)
       .where(eq(invites.id, input.inviteId))
       .returning()

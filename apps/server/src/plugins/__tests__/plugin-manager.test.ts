@@ -83,19 +83,19 @@ describe('plugin-manager', () => {
     test('should reject when plugins are disabled in settings', async () => {
       await tdb.update(settings).set({ enablePlugins: false });
 
-      await expect(pluginManager.load('plugin-a')).rejects.toThrow(
+      expect(pluginManager.load('plugin-a')).rejects.toThrow(
         'Plugins are disabled.'
       );
     });
 
     test('should handle plugin with invalid package.json', async () => {
-      await expect(
+      expect(
         pluginManager.getPluginInfo('plugin-invalid-package')
       ).rejects.toThrow();
     });
 
     test('should handle plugin with missing entry file', async () => {
-      await expect(
+      expect(
         pluginManager.getPluginInfo('plugin-missing-entry')
       ).rejects.toThrow('Plugin entry file not found');
     });
@@ -189,7 +189,7 @@ describe('plugin-manager', () => {
       await pluginManager.load('plugin-b');
       await pluginManager.togglePlugin('plugin-b', false);
 
-      await expect(
+      expect(
         pluginManager.executeCommand('plugin-b', 'sum', mockInvokerCtx, {
           a: 1,
           b: 2
@@ -200,7 +200,7 @@ describe('plugin-manager', () => {
     test('should throw error when plugin has no commands', async () => {
       await pluginManager.load('plugin-a');
 
-      await expect(
+      expect(
         pluginManager.executeCommand(
           'plugin-a',
           'nonexistent',
@@ -213,7 +213,7 @@ describe('plugin-manager', () => {
     test('should throw error when command does not exist', async () => {
       await pluginManager.load('plugin-b');
 
-      await expect(
+      expect(
         pluginManager.executeCommand(
           'plugin-b',
           'nonexistent',
@@ -278,7 +278,7 @@ describe('plugin-manager', () => {
     test('should persist enabled state to database', async () => {
       await pluginManager.togglePlugin('plugin-a', true);
 
-      const row = await tdb
+      const row = tdb
         .select({ enabled: pluginData.enabled })
         .from(pluginData)
         .where(eq(pluginData.pluginId, 'plugin-a'))
@@ -313,7 +313,7 @@ describe('plugin-manager', () => {
     });
 
     test('should throw error for non-existent plugin', async () => {
-      await expect(
+      expect(
         pluginManager.getPluginInfo('nonexistent-plugin')
       ).rejects.toThrow('package.json not found');
     });
@@ -578,25 +578,25 @@ describe('plugin-manager', () => {
 
   describe('plugin ID validation', () => {
     test('should reject plugin ID with path traversal', async () => {
-      await expect(pluginManager.getPluginInfo('../../../etc')).rejects.toThrow(
+      expect(pluginManager.getPluginInfo('../../../etc')).rejects.toThrow(
         'Invalid plugin ID'
       );
     });
 
     test('should reject plugin ID with forward slash', async () => {
-      await expect(pluginManager.getPluginInfo('foo/bar')).rejects.toThrow(
+      expect(pluginManager.getPluginInfo('foo/bar')).rejects.toThrow(
         'Invalid plugin ID'
       );
     });
 
     test('should reject plugin ID with backslash', async () => {
-      await expect(pluginManager.getPluginInfo('foo\\bar')).rejects.toThrow(
+      expect(pluginManager.getPluginInfo('foo\\bar')).rejects.toThrow(
         'Invalid plugin ID'
       );
     });
 
     test('should reject plugin ID with null byte', async () => {
-      await expect(pluginManager.getPluginInfo('foo\0bar')).rejects.toThrow(
+      expect(pluginManager.getPluginInfo('foo\0bar')).rejects.toThrow(
         'Invalid plugin ID'
       );
     });
@@ -675,7 +675,7 @@ describe('plugin-manager', () => {
     test('should throw error when updating unregistered setting key', async () => {
       await pluginManager.load('plugin-with-settings');
 
-      await expect(
+      expect(
         pluginManager.updatePluginSetting(
           'plugin-with-settings',
           'nonexistent',
@@ -687,7 +687,7 @@ describe('plugin-manager', () => {
     test('should throw error when plugin has no settings', async () => {
       await pluginManager.load('plugin-a');
 
-      await expect(
+      expect(
         pluginManager.updatePluginSetting('plugin-a', 'key', 'value')
       ).rejects.toThrow('no registered settings');
     });

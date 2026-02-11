@@ -17,6 +17,7 @@ import {
 } from '@sharkord/shared';
 import { randomUUIDv7 } from 'bun';
 import { type BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
+import { hashPassword } from '../helpers/password';
 import {
   categories,
   channels,
@@ -143,7 +144,7 @@ const seedDatabase = async (db: BunSQLiteDatabase) => {
   const ownerUser: TIUser = {
     name: 'Test Owner',
     identity: 'testowner',
-    password: await sha256('password123'),
+    password: await sha256('password123').then(hashPassword),
     avatarId: null,
     bannerId: null,
     bio: null,
@@ -162,7 +163,7 @@ const seedDatabase = async (db: BunSQLiteDatabase) => {
   const regularUser: TIUser = {
     name: 'Test User',
     identity: 'testuser',
-    password: await sha256('password123'),
+    password: await sha256('password123').then(hashPassword),
     avatarId: null,
     bannerId: null,
     bio: null,

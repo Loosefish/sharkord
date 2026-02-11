@@ -41,7 +41,7 @@ const getMessagesRoute = protectedProcedure
 
     const { channelId, cursor, limit } = input;
 
-    const channel = await db
+    const channel = db
       .select({
         private: channels.private,
         fileAccessToken: channels.fileAccessToken
@@ -61,9 +61,9 @@ const getMessagesRoute = protectedProcedure
       .where(
         cursor
           ? and(
-              eq(messages.channelId, channelId),
-              lt(messages.createdAt, cursor)
-            )
+            eq(messages.channelId, channelId),
+            lt(messages.createdAt, cursor)
+          )
           : eq(messages.channelId, channelId)
       )
       .orderBy(desc(messages.createdAt))

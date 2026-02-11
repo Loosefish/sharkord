@@ -24,7 +24,7 @@ describe('files router', () => {
     expect(tempFile).toBeDefined();
     expect(tempFile.id).toBeDefined();
 
-    const file = await fileManager.getTemporaryFile(tempFile.id);
+    const file = fileManager.getTemporaryFile(tempFile.id);
 
     expect(file).toBeDefined();
     expect(file?.path).toBe(tempFile.path);
@@ -51,7 +51,7 @@ describe('files router', () => {
   test('should throw when deleting a non-existent temporary file', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.files.deleteTemporary({
         fileId: '<non-existent-file-id>' // non-existent file ID
       })
@@ -61,7 +61,7 @@ describe('files router', () => {
   test('should throw when deleting other users temporary file', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.files.deleteTemporary({
         fileId: tempFile.id
       })

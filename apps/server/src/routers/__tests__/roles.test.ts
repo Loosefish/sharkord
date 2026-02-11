@@ -6,7 +6,7 @@ describe('roles router', () => {
   test('should throw when user lacks permissions (getAll)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.roles.getAll()).rejects.toThrow(
+    expect(caller.roles.getAll()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -14,7 +14,7 @@ describe('roles router', () => {
   test('should throw when user lacks permissions (add)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.roles.add()).rejects.toThrow(
+    expect(caller.roles.add()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -22,7 +22,7 @@ describe('roles router', () => {
   test('should throw when user lacks permissions (update)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.roles.update({
         roleId: 2,
         name: 'Updated Role',
@@ -35,7 +35,7 @@ describe('roles router', () => {
   test('should throw when user lacks permissions (delete)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.roles.delete({
         roleId: 2
       })
@@ -45,7 +45,7 @@ describe('roles router', () => {
   test('should throw when user lacks permissions (setDefault)', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.roles.setDefault({
         roleId: 1
       })
@@ -138,7 +138,7 @@ describe('roles router', () => {
   test('should throw when deleting persistent role', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.roles.delete({
         roleId: 1
       })
@@ -151,7 +151,7 @@ describe('roles router', () => {
     const newRoleId = await caller.roles.add();
     await caller.roles.setDefault({ roleId: newRoleId });
 
-    await expect(
+    expect(
       caller.roles.delete({
         roleId: newRoleId
       })
@@ -161,7 +161,7 @@ describe('roles router', () => {
   test('should throw when deleting non-existing role', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.roles.delete({
         roleId: 999999
       })
@@ -186,7 +186,7 @@ describe('roles router', () => {
   test('should throw when setting non-existing role as default', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.roles.setDefault({
         roleId: 999999
       })

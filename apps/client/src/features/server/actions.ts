@@ -55,7 +55,7 @@ export const connect = async () => {
   const { serverId } = info;
 
   const host = getHostFromServer();
-  const trpc = await connectToTRPC(host);
+  const trpc = connectToTRPC(host);
 
   const { hasPassword, handshakeHash } = await trpc.others.handshake.query();
 

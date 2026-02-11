@@ -15,7 +15,7 @@ const getCategoryRoute = protectedProcedure
   .query(async ({ input, ctx }) => {
     await ctx.needsPermission(Permission.MANAGE_CATEGORIES);
 
-    const category = await db
+    const category = db
       .select()
       .from(categories)
       .where(eq(categories.id, input.categoryId))

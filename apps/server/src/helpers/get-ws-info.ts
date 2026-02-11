@@ -19,8 +19,7 @@ const getWsIp = (
     headers['forwarded'] ||
     ws?._socket?.remoteAddress ||
     ws?.socket?.remoteAddress ||
-    req?.socket?.remoteAddress ||
-    req?.connection?.remoteAddress;
+    req?.socket?.remoteAddress;
 
   if (!ip) return undefined;
 

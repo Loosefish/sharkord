@@ -16,7 +16,7 @@ const updateUserRoute = protectedProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const updatedUser = await db
+    const updatedUser = db
       .update(users)
       .set({
         name: input.name,

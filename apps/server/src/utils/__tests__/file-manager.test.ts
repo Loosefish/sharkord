@@ -109,7 +109,7 @@ describe('file manager', () => {
   });
 
   test('should throw error for non-existent temporary file', async () => {
-    await expect(
+    expect(
       fileManager.removeTemporaryFile('non-existent-id')
     ).rejects.toThrow('Temporary file not found');
   });
@@ -229,7 +229,7 @@ describe('file manager', () => {
 
     tempFilesToCleanup.push(path.join(PUBLIC_PATH, savedFile.name));
 
-    const dbFile = await tdb
+    const dbFile = tdb
       .select()
       .from(files)
       .where(eq(files.id, savedFile.id))
@@ -244,7 +244,7 @@ describe('file manager', () => {
   });
 
   test('should throw error when saving non-existent temporary file', async () => {
-    await expect(fileManager.saveFile('non-existent-id', 1)).rejects.toThrow(
+    expect(fileManager.saveFile('non-existent-id', 1)).rejects.toThrow(
       'File not found'
     );
   });
@@ -261,7 +261,7 @@ describe('file manager', () => {
 
     tempFilesToCleanup.push(tempFile.path);
 
-    await expect(fileManager.saveFile(tempFile.id, 999)).rejects.toThrow(
+    expect(fileManager.saveFile(tempFile.id, 999)).rejects.toThrow(
       "You don't have permission to access this file"
     );
   });
@@ -321,7 +321,7 @@ describe('file manager', () => {
 
     tempFilesToCleanup.push(tempFile.path);
 
-    await expect(fileManager.saveFile(tempFile.id, 1)).rejects.toThrow(
+    expect(fileManager.saveFile(tempFile.id, 1)).rejects.toThrow(
       'User storage limit exceeded'
     );
 
@@ -351,7 +351,7 @@ describe('file manager', () => {
 
     tempFilesToCleanup.push(tempFile.path);
 
-    await expect(fileManager.saveFile(tempFile.id, 1)).rejects.toThrow(
+    expect(fileManager.saveFile(tempFile.id, 1)).rejects.toThrow(
       'Server storage limit exceeded.'
     );
 
@@ -409,7 +409,7 @@ describe('file manager', () => {
 
     tempFilesToCleanup.push(path.join(PUBLIC_PATH, newSavedFile.name));
 
-    const oldDbFile = await tdb
+    const oldDbFile = tdb
       .select()
       .from(files)
       .where(eq(files.id, oldSavedFile.id))
@@ -417,7 +417,7 @@ describe('file manager', () => {
 
     expect(oldDbFile).toBeUndefined();
 
-    const newDbFile = await tdb
+    const newDbFile = tdb
       .select()
       .from(files)
       .where(eq(files.id, newSavedFile.id))
@@ -508,13 +508,13 @@ describe('file manager', () => {
     expect(savedA.name).toBe('my-file.txt');
     expect(savedB.name).toBe('my-file-2.txt');
 
-    const dbA = await tdb
+    const dbA = tdb
       .select()
       .from(files)
       .where(eq(files.id, savedA.id))
       .get();
 
-    const dbB = await tdb
+    const dbB = tdb
       .select()
       .from(files)
       .where(eq(files.id, savedB.id))

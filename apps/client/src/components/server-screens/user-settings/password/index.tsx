@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { closeServerScreens } from '@/features/server-screens/actions';
 import { useForm } from '@/hooks/use-form';
 import { getTRPCClient } from '@/lib/trpc';
+import { sha256 } from '@sharkord/shared';
 import { memo, useCallback } from 'react';
 import { toast } from 'sonner';
 
@@ -25,7 +26,16 @@ const Password = memo(() => {
     const trpc = getTRPCClient();
 
     try {
-      await trpc.users.updatePassword.mutate(values);
+      // Hash passwords on client before sending
+      const hashedCurrentPassword = await sha256(values.currentPassword);
+      const hashedNewPassword = await sha256(values.newPassword);
+      const hashedConfirmNewPassword = await sha256(values.confirmNewPassword);
+      
+      await trpc.users.updatePassword.mutate({
+        currentPassword: hashedCurrentPassword,
+        newPassword: hashedNewPassword,
+        confirmNewPassword: hashedConfirmNewPassword
+      });
       toast.success('Password updated!');
     } catch (error) {
       setTrpcErrors(error);

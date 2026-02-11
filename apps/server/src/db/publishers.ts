@@ -138,7 +138,7 @@ const publishChannel = async (
     return;
   }
 
-  const channel = await db
+  const channel = db
     .select()
     .from(channels)
     .where(eq(channels.id, channelId))
@@ -171,7 +171,7 @@ const publishCategory = async (
     return;
   }
 
-  const category = await db
+  const category = db
     .select()
     .from(categories)
     .where(eq(categories.id, categoryId))

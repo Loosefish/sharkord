@@ -17,7 +17,7 @@ const editMessageRoute = protectedProcedure
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const message = await db
+    const message = db
       .select({
         userId: messages.userId,
         channelId: messages.channelId,
@@ -40,7 +40,7 @@ const editMessageRoute = protectedProcedure
 
     invariant(
       message.userId === ctx.user.id ||
-        (await ctx.hasPermission(Permission.MANAGE_MESSAGES)),
+      (await ctx.hasPermission(Permission.MANAGE_MESSAGES)),
       {
         code: 'FORBIDDEN',
         message: 'You do not have permission to edit this message'

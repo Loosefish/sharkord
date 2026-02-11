@@ -20,7 +20,7 @@ const markAsReadRoute = protectedProcedure
     const { channelId } = input;
 
     // get the newest message in the channel
-    const newestMessage: TMessage | undefined = await db
+    const newestMessage: TMessage | undefined = db
       .select()
       .from(messages)
       .where(eq(messages.channelId, channelId))
@@ -34,7 +34,7 @@ const markAsReadRoute = protectedProcedure
 
     const newestId = newestMessage.id;
 
-    const existingState = await db
+    const existingState = db
       .select()
       .from(channelReadStates)
       .where(

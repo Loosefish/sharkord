@@ -13,7 +13,7 @@ const loadDb = async () => {
 
   db = drizzle({ client: sqlite });
 
-  await migrate(db, { migrationsFolder: DRIZZLE_PATH });
+  migrate(db, { migrationsFolder: DRIZZLE_PATH });
   await seedDatabase();
 };
 

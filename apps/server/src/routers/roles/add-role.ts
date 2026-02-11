@@ -8,7 +8,7 @@ import { protectedProcedure } from '../../utils/trpc';
 const addRoleRoute = protectedProcedure.mutation(async ({ ctx }) => {
   await ctx.needsPermission(Permission.MANAGE_ROLES);
 
-  const role = await db
+  const role = db
     .insert(roles)
     .values({
       name: 'New Role',

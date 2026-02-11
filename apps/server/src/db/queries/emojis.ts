@@ -26,7 +26,7 @@ const parseEmoji = (row: any): TJoinedEmoji => ({
 });
 
 const getEmojiById = async (id: number): Promise<TJoinedEmoji | undefined> => {
-  const row = await db
+  const row = db
     .select(emojiSelectFields)
     .from(emojis)
     .innerJoin(files, eq(emojis.fileId, files.id))
@@ -51,7 +51,7 @@ const getEmojis = async (): Promise<TJoinedEmoji[]> => {
 };
 
 const emojiExists = async (name: string): Promise<boolean> => {
-  const emoji = await db
+  const emoji = db
     .select()
     .from(emojis)
     .where(eq(emojis.name, name))
@@ -85,7 +85,7 @@ const getUniqueEmojiName = async (baseName: string): Promise<string> => {
 const getEmojiFileIdByEmojiName = async (
   name: string
 ): Promise<number | null> => {
-  const result = await db
+  const result = db
     .select({
       fileId: emojis.fileId
     })

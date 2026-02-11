@@ -29,7 +29,7 @@ const joinVoiceRoute = protectedProcedure
       ctx.needsChannelPermission(input.channelId, ChannelPermission.JOIN)
     ]);
 
-    const channel = await db
+    const channel = db
       .select()
       .from(channels)
       .where(eq(channels.id, input.channelId))

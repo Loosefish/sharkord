@@ -19,7 +19,7 @@ const toggleMessageReactionRoute = protectedProcedure
   .mutation(async ({ input, ctx }) => {
     await ctx.needsPermission(Permission.REACT_TO_MESSAGES);
 
-    const message = await db
+    const message = db
       .select()
       .from(messages)
       .where(eq(messages.id, input.messageId))

@@ -35,7 +35,7 @@ const updateEmojiRoute = protectedProcedure
       );
     }
 
-    const updatedEmoji = await db
+    const updatedEmoji = db
       .update(emojis)
       .set({
         name: input.name,

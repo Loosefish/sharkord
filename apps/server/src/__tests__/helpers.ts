@@ -39,18 +39,21 @@ const initTest = async (userId: number = 1) => {
   return { caller, mockedToken, initialData };
 };
 
-const login = async (identity: string, password: string, invite?: string) =>
-  fetch(`${testsBaseUrl}/login`, {
+const login = async (identity: string, password: string, invite?: string) => {
+  const hashedPassword = await sha256(password);
+
+  return fetch(`${testsBaseUrl}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       identity,
-      password,
+      password: hashedPassword,
       invite
     })
   });
+};
 
 const uploadFile = async (file: File, token: string) =>
   fetch(`${testsBaseUrl}/upload`, {

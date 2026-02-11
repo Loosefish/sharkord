@@ -20,7 +20,7 @@ describe('messages router', () => {
 
     const messageId = messages.messages[0]!.id;
 
-    await expect(
+    expect(
       caller2.messages.edit({
         messageId,
         content: 'Edited message'
@@ -46,7 +46,7 @@ describe('messages router', () => {
 
     const messageId = messages.messages[0]!.id;
 
-    await expect(
+    expect(
       caller2.messages.delete({
         messageId
       })
@@ -71,7 +71,7 @@ describe('messages router', () => {
 
     const messageId = messages.messages[0]!.id;
 
-    await expect(
+    expect(
       caller2.messages.toggleReaction({
         messageId,
         emoji: '👍'
@@ -280,7 +280,7 @@ describe('messages router', () => {
   test('should throw when editing non-existing message', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.messages.edit({
         messageId: 999999,
         content: 'Edited content'
@@ -291,7 +291,7 @@ describe('messages router', () => {
   test('should throw when deleting non-existing message', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.messages.delete({
         messageId: 999999
       })

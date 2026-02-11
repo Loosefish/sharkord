@@ -10,7 +10,7 @@ import { files, messageFiles } from '../schema';
 const removeFile = async (fileId: number): Promise<TFile | undefined> => {
   await db.delete(messageFiles).where(eq(messageFiles.fileId, fileId));
 
-  const removedFile = await db
+  const removedFile = db
     .delete(files)
     .where(eq(files.id, fileId))
     .returning()

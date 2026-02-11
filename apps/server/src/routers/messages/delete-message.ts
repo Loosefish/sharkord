@@ -13,7 +13,7 @@ import { protectedProcedure } from '../../utils/trpc';
 const deleteMessageRoute = protectedProcedure
   .input(z.object({ messageId: z.number() }))
   .mutation(async ({ input, ctx }) => {
-    const targetMessage = await db
+    const targetMessage = db
       .select({
         userId: messages.userId,
         channelId: messages.channelId
@@ -29,7 +29,7 @@ const deleteMessageRoute = protectedProcedure
     });
     invariant(
       targetMessage.userId === ctx.user.id ||
-        (await ctx.hasPermission(Permission.MANAGE_MESSAGES)),
+      (await ctx.hasPermission(Permission.MANAGE_MESSAGES)),
       {
         code: 'FORBIDDEN',
         message: 'You do not have permission to delete this message'

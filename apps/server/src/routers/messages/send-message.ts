@@ -138,7 +138,7 @@ const sendMessageRoute = protectedProcedure
       }
     }
 
-    const message = await db
+    const message = db
       .insert(messages)
       .values({
         channelId: input.channelId,

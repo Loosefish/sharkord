@@ -14,7 +14,7 @@ describe('plugins router', () => {
   test('should throw when user lacks permissions', async () => {
     const { caller } = await initTest(2);
 
-    await expect(caller.plugins.get()).rejects.toThrow(
+    expect(caller.plugins.get()).rejects.toThrow(
       'Insufficient permissions'
     );
   });
@@ -69,7 +69,7 @@ describe('plugins router', () => {
   test('should throw when user lacks permissions', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.plugins.toggle({
         pluginId: 'plugin-a',
         enabled: false
@@ -124,7 +124,7 @@ describe('plugins router', () => {
       enabled: true
     });
 
-    const row = await tdb
+    const row = tdb
       .select({ enabled: pluginData.enabled })
       .from(pluginData)
       .where(eq(pluginData.pluginId, 'plugin-a'))
@@ -182,7 +182,7 @@ describe('plugins router', () => {
     test('should throw when user lacks permissions', async () => {
       const { caller } = await initTest(2);
 
-      await expect(
+      expect(
         caller.plugins.getCommands({
           pluginId: 'plugin-b'
         })
@@ -267,7 +267,7 @@ describe('plugins router', () => {
   test('should throw when user lacks permissions', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.plugins.executeCommand({
         pluginId: 'plugin-b',
         commandName: 'sum',
@@ -312,7 +312,7 @@ describe('plugins router', () => {
 
     await pluginManager.load('plugin-b');
 
-    await expect(
+    expect(
       caller.plugins.executeCommand({
         pluginId: 'plugin-b',
         commandName: 'nonexistent',
@@ -324,7 +324,7 @@ describe('plugins router', () => {
   test('should throw when plugin is not loaded', async () => {
     const { caller } = await initTest();
 
-    await expect(
+    expect(
       caller.plugins.executeCommand({
         pluginId: 'plugin-b',
         commandName: 'sum',
@@ -352,7 +352,7 @@ describe('plugins router', () => {
   test('should throw when user lacks permissions', async () => {
     const { caller } = await initTest(2);
 
-    await expect(
+    expect(
       caller.plugins.getLogs({
         pluginId: 'plugin-a'
       })

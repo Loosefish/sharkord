@@ -15,7 +15,7 @@ const leaveVoiceRoute = protectedProcedure.mutation(async ({ ctx }) => {
     message: 'User is not in a voice channel'
   });
 
-  const channel = await db
+  const channel = db
     .select()
     .from(channels)
     .where(eq(channels.id, ctx.currentVoiceChannelId))

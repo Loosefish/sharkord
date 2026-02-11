@@ -21,7 +21,7 @@ const addChannelRoute = protectedProcedure
     await ctx.needsPermission(Permission.MANAGE_CHANNELS);
 
     const channel = await db.transaction(async (tx) => {
-      const maxPositionChannel = await tx
+      const maxPositionChannel = tx
         .select()
         .from(channels)
         .orderBy(desc(channels.position))
@@ -31,13 +31,12 @@ const addChannelRoute = protectedProcedure
 
       const now = Date.now();
 
-      const newChannel = await tx
+      const newChannel = tx
         .insert(channels)
         .values({
-          position:
-            maxPositionChannel?.position !== undefined
-              ? maxPositionChannel.position + 1
-              : 0,
+          position: maxPositionChannel?.position !== undefined
+            ? maxPositionChannel.position + 1
+            : 0,
           name: input.name,
           type: input.type,
           fileAccessToken: randomUUIDv7(),

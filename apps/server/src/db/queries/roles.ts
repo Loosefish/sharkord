@@ -24,7 +24,7 @@ const getDefaultRole = async (): Promise<TRole | undefined> =>
   db.select().from(roles).where(eq(roles.isDefault, true)).get();
 
 const getRole = async (roleId: number): Promise<TJoinedRole | undefined> => {
-  const role = await db
+  const role = db
     .select(roleSelectFields)
     .from(roles)
     .leftJoin(rolePermissions, sql`${roles.id} = ${rolePermissions.roleId}`)

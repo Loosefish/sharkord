@@ -1,7 +1,7 @@
 import http from 'http';
 
 const healthRouteHandler = (
-  req: http.IncomingMessage,
+  _req: http.IncomingMessage,
   res: http.ServerResponse
 ) => {
   res.writeHead(200, { 'Content-Type': 'application/json' });

@@ -1,6 +1,8 @@
 import { getUrlFromServer } from '@/helpers/get-file-url';
+import { getLocalStorageItem, LocalStorageKey } from '@/helpers/storage';
 import type { TServerInfo } from '@sharkord/shared';
 import { toast } from 'sonner';
+import { connect } from '../server/actions';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
 import { appSliceActions } from './slice';
@@ -35,6 +37,18 @@ export const loadApp = async () => {
   }
 
   setInfo(info);
+  
+  // Check if user has a saved token and auto-connect
+  const token = getLocalStorageItem(LocalStorageKey.TOKEN);
+  if (token) {
+    try {
+      await connect();
+    } catch (error) {
+      console.error('Auto-connect failed:', error);
+      // Don't show error toast - user can manually login if auto-connect fails
+    }
+  }
+  
   setAppLoading(false);
 };
 
